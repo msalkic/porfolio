@@ -1,0 +1,422 @@
+
+
+<?xml version = "1.0"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+	<!--Javascript for multiple forms making them mutually exclusive -->
+
+        <script type="text/javascript">
+            function displayForm(c){
+                if(c.value == "1"){
+                    document.getElementById("form1").style.visibility='visible';
+                    document.getElementById("form2").style.visibility='hidden';
+          		    document.getElementById("form3").style.visibility='hidden';
+          			document.getElementById("form4").style.visibility='hidden';
+          			document.getElementById("form5").style.visibility='hidden';
+					document.getElementById("form6").style.visibility='hidden';
+                }
+                else if(c.value =="2"){
+                    document.getElementById("form1").style.visibility='hidden';
+                    document.getElementById("form2").style.visibility='visible';
+					document.getElementById("form3").style.visibility='hidden';
+					document.getElementById("form4").style.visibility='hidden';
+					document.getElementById("form5").style.visibility='hidden';
+					document.getElementById("form6").style.visibility='hidden';
+                }
+                else if(c.value =="3"){
+                    document.getElementById("form1").style.visibility='hidden';
+                    document.getElementById("form2").style.visibility='hidden';
+					document.getElementById("form3").style.visibility='visible';
+					document.getElementById("form4").style.visibility='hidden';
+					document.getElementById("form5").style.visibility='hidden';
+					document.getElementById("form6").style.visibility='hidden';
+
+
+            }
+              else if(c.value =="4"){
+                    document.getElementById("form1").style.visibility='hidden';
+                    document.getElementById("form2").style.visibility='hidden';
+					document.getElementById("form3").style.visibility='hidden';
+					document.getElementById("form4").style.visibility='visible';
+					document.getElementById("form5").style.visibility='hidden';
+					document.getElementById("form6").style.visibility='hidden';
+             }
+               else if(c.value =="5"){
+                    document.getElementById("form1").style.visibility='hidden';
+                    document.getElementById("form2").style.visibility='hidden';
+					document.getElementById("form3").style.visibility='hidden';
+					document.getElementById("form4").style.visibility='hidden';
+					document.getElementById("form5").style.visibility='visible';
+					document.getElementById("form6").style.visibility='hidden';
+					
+			 } else if(c.value =="6"){
+                    document.getElementById("form1").style.visibility='hidden';
+                    document.getElementById("form2").style.visibility='hidden';
+					document.getElementById("form3").style.visibility='hidden';
+					document.getElementById("form4").style.visibility='hidden';
+					document.getElementById("form5").style.visibility='hidden';
+					document.getElementById("form6").style.visibility='visible';
+					
+			 }else{
+                }
+
+            }
+        </script>
+
+<!--Javascript for Adding multiple lines in Add Stock form-->
+
+  <meta charset="utf-8"> <!-- below we reference jquery API-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script> //check if the document is ready; send it to the event handler.
+      $(document).ready(function(e){
+          //Variables (if we need a max num of rows, any html etc.)
+          //the html is a field that that gets appended when called
+          var html ='<p /><div>ISBN*: <input type="text" name="isbn[]" required="required" id="child_isbn">Title*: <input type="text" name="title[]" required="required"id="child_title">Year*: <input type="text" name="year[]" required="required" id="child_year">Quantity*: <input type="number" name="purch_quantity[]" required="required" id="child_purch_quantity">Cost per Book*: <input type="number" step="0.01" min="0" name="purch_price_per_book[]" required="required" id="child_purch_price_per_book"><br><br>Publisher name*: <input type="text" name="pub_name[]" required="required" id="child_pub_name">Publisher phone*: <input type="text" name="pub_phone[]" required="required" id="child_pub_phone"> Publisher address*: <input type="text" name="pub_address[]" required="required" id="child_pub_address"> <a href="#" id="remove">X</a><br><br></div>';
+
+          var max_rows = 50;
+
+          var x = 1;
+          //Add rows to the form [we reference add id from update stock]; we are going to append more of these fields to the bottom of the div tag
+          $("#add").click(function(e){
+
+            if(x <= max_rows)
+            {
+            $("#container").append(html);
+            x++;
+            }
+
+          });
+
+          //Remove rows from the form *use the .on function when some action happens some other happens in real time
+          //the action is click, the element is remove
+          $("#container").on('click', '#remove', function(e){
+
+            $(this).parent('div').remove();
+            x--;
+          });
+
+          //Populate values from the first row
+          $("#container").on('dblclick', '#child_pub_name', function(e){
+              //the val of child_pub_name = pub_name
+            $(this).val( $('#pub_name').val());
+          });
+          $("#container").on('dblclick', '#child_pub_phone', function(e){
+            $(this).val( $('#pub_phone').val());
+          });
+          $("#container").on('dblclick', '#child_pub_address', function(e){
+            $(this).val( $('#pub_address').val());
+          });
+
+      });
+    </script>
+
+<!--Javascript for Adding multiple lines in New Order form-->
+
+    <script> //check if the document is ready; send it to the event handler.
+      $(document).ready(function(e){
+          //Variables (if we need a max num of rows, any html etc.)
+          //the html is a field that that gets appended when called
+          var html ='<p /><div>ISBN*: <input type="number" name="isbn[]" required="required" id="child_isbn"> Quantity*: <input type="number" name="quantity[]" required="required" id="child_quantity"><a href="#" id="remove">X</a><br><br></div>';
+
+          var max_rows = 50;
+
+          var x = 1;
+          //Add rows to the form [we reference cust_add id from update stock]; we are going to append more of these fields to the bottom of the div tag
+          $("#cust_add").click(function(e){
+
+            if(x <= max_rows)
+            {
+            $("#container1").append(html);
+            x++;
+            }
+
+          });
+
+          //Remove rows from the form *use the .on function when some action happens some other happens in real time
+          //the action is click, the element is remove
+          $("#container1").on('click', '#remove', function(e){
+
+            $(this).parent('div').remove();
+            x--;
+          });
+
+          //Populate values from the first row
+          $("#container1").on('dblclick', '#child_firstname', function(e){
+              //the val of child_pub_name = pub_name
+            $(this).val( $('#firstname').val());
+          });
+          $("#container1").on('dblclick', '#child_lastname', function(e){
+            $(this).val( $('#lastname').val());
+          });
+          $("#container1").on('dblclick', '#child_CustomerID', function(e){
+            $(this).val( $('#CustomerID').val());
+          });
+          $("#container1").on('dblclick', '#child_isbn', function(e){
+            $(this).val( $('#isbn').val());
+          });
+
+      });
+    </script>
+
+	
+<!--Style for keeping multiple forms aligned -->
+	
+<style>
+      div.a{
+	  top:200px;
+	  left:100px;
+	  position:absolute;}
+
+	  div.b{
+	  top:200px;
+	  left:100px;
+	  position:absolute;}
+
+	  div.c{
+      top:200px;
+	  left:100px;
+	  position:absolute;}
+
+	  div.d{
+      top:200px;
+	  left:250px;
+	  position:absolute;}
+
+	  div.e{
+      top:200px;
+	  left:600px;
+	  position:absolute;}
+	  
+      div.f{
+      top:200px;
+	  left:600px;
+	  position:absolute;}
+
+</style>
+
+
+<!--Style for various input in the form -->
+
+<style>
+input[type=text], select {
+    padding: 2px 2px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+input[type=number], select {
+    padding: 2px 2px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+input[type=email], select {
+    padding: 2px 2px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+input[type=submit] {
+    background-color: #4CAF50;
+    color: white;
+    padding: 15px 15px;
+    margin: 8px 0;
+    border: 5px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+	font-size: 20px;
+
+}
+
+input[type=submit]:hover {
+    background-color: #45a049;
+}
+
+input[type=reset] {
+    background-color: #4CAF50;
+    color: white;
+    padding: 15px 15px;
+    margin: 8px 0;
+    border: 5px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+	font-size: 20px;
+
+}
+
+input[type=reset]:hover {
+    background-color: #45a049;
+}
+
+div {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 20px;
+}
+</style>
+
+<!--Style for background image -->
+
+
+<style> 
+body {
+    background-image: url("book.jpeg");
+    background-color: #cccccc;
+}
+</style>
+
+<!--Style for Radio button-->
+
+<style>
+.conatiner_radio {
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 26px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.conatiner_radio input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+</style>
+
+    </head>
+<h1><center>Welcome To Downtown Books!</center></h1><br><br><br>
+
+    <body>
+        <form>
+		<center>
+            <label class='conatiner_radio'>Add Customer<input value="1" type="radio" name="formselector" style="vertical-align: middle" onclick="displayForm(this)"></label>
+            <label class='conatiner_radio'>Update Customer<input value="2" type="radio" name="formselector" style="vertical-align: middle" onclick="displayForm(this)"></label>
+            <label class='conatiner_radio'>Update Stock<input value="3" type="radio" name="formselector" style="vertical-align: middle"  onclick="displayForm(this)"></label>
+            <label class='conatiner_radio'>New Customer Order<input value="4" type="radio" name="formselector" style="vertical-align: middle"  onclick="displayForm(this)"></label>
+            <label class='conatiner_radio'>Summary<input value="5" type="radio" name="formselector" style="vertical-align: middle"  onclick="displayForm(this)"></label>
+			<label class='conatiner_radio'>Customer Information<input value="6" type="radio" name="formselector" style="vertical-align: middle"  onclick="displayForm(this)"></label>
+			
+
+        </center>
+		</form>
+<body>
+
+<!--Form for Adding new customer -->
+
+<form style="visibility:hidden" id="form1"  action="insert.php" method="POST">
+<div class="a">
+<h2><center> Add Customer </center></h2>
+
+    First Name*: <input type="text" name="firstname" required="required">
+    Middle Name: <input type="text" name="midname">
+    Last Name*: <input type="text" name="lastname" required="required">
+    Phone*: <input type="text" pattern="[0-9]{10}" name="telphone" required="required">
+    Email*: <input type="email" name="email_address" required="required"> <br><br>
+
+	<input type="submit" name="add_cust" align="center">
+    <input type="reset">
+
+</div>
+</form>
+
+
+<!--Form for Updating customer information -->
+
+<form style="visibility:hidden" id="form2" action="insert.php" method="POST">
+<div class="b">
+<h2><center> Update Customer Information </center></h2>
+
+    CustID*: <input type="text" name="cust_id" required="required">
+    First Name*: <input type="text" name="fname" required="required">
+    Middle Name: <input type="text" name="mname">
+    Last Name*: <input type="text" name="lname" required="required">
+    Phone*: <input type="text" name="phone" pattern="[0-9]{10}" required="required"> 
+    Email*: <input type="email" name="email" required="required"><br><br>
+    <input type="submit" name="update_cust">
+    <input type="reset">
+	</div>
+
+</form>
+
+<form style="visibility:hidden" id="form3" action="insert.php" method="POST">
+<div class="c">
+<h2><center> Update Stock </center></h2>
+
+  <div id="container">
+    ISBN*: <input type="text" name="isbn[]"  required="required" id="isbn">
+    Title*: <input type="text" name="title[]" required="required"id="title">
+    Year*: <input type="text" name="year[]" required="required" id="year">
+    Quantity*: <input type="number" name="purch_quantity[]" min=1 required="required" id="purch_quantity">
+    Cost per Book*: <input type="number" step="0.01" min="0" name="purch_price_per_book[]" required="required" id="purch_price_per_book"><br><br>
+    Publisher name*: <input type="text" name="pub_name[]" required="required" id="pub_name">
+    Publisher phone*: <input type="text" name="pub_phone[]" pattern="[0-9]{10}" required="required" id="pub_phone">
+    Publisher address*: <input type="text" name="pub_address[]" required="required" id="pub_address">
+    <a href="#" id="add">Add More</a><br><br> <!-- this adds an html link-->
+  </div>
+    <input type="submit" name="update_stock">
+    <input type="reset">
+	</div>
+</form>
+
+<!--Form for New Customer Order-->
+
+<form style="visibility:hidden" id="form4" action="insert.php" method="POST">
+<div class="d">
+<h2><center> New Customer Order</center> </h2>
+
+<div id="container1">
+    Customer ID*: <input type="number" name="customer_id" min=1 required="required" id="CustomerID">
+    ISBN*: <input type="text" name="isbn[]"  required="required" id="isbn">
+    Quantity*: <input type="number" name="quantity[]" min=1 required="required" id="quantity">
+    Apply Credits*: <input type="radio" name="credits" value="yes"> Yes
+    <input type="radio" name="credits" value="no"> No
+	 <a href="#" id="cust_add">Add More</a><br><br> <!-- this adds an html link-->
+  </div>
+    <input type="submit" name="new_order">
+    <input type="reset">
+  </div>
+
+</form>
+
+<!--Summary form for Profit and Stock-->
+
+<form style="visibility:hidden" id="form5" action="insert.php" method="POST">
+    
+	<div class="e">
+	<h2><center> Summary </center></h2>
+
+      <input type="submit" name="stock_summary" value="Stock Summary" class="Stock Summary" formaction="Stock_Summary.php">
+      <input type="submit" name="Profit_summary" value="Profit Summary" class="Profit Summary" formaction="Profit_Summary.php">
+    </div>
+</form>
+
+<!--Customer info Summary form-->
+
+<form style="visibility:hidden" id="form6" action="insert.php" method="POST">
+
+    <div class="f">
+	<h2><center> Customer Information </center></h2>
+
+	    Customer ID*: <input type="number" name="customer_id" required="required" id="CustomerID">
+        <input type="submit" formaction="Customer_Info.php">
+    </div>
+</form>
+
+
+
+<?php echo $output;?>
+</body>

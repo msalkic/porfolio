@@ -49,7 +49,7 @@
 					document.getElementById("form4").style.visibility='hidden';
 					document.getElementById("form5").style.visibility='visible';
 					document.getElementById("form6").style.visibility='hidden';
-					
+
 			 } else if(c.value =="6"){
                     document.getElementById("form1").style.visibility='hidden';
                     document.getElementById("form2").style.visibility='hidden';
@@ -57,7 +57,7 @@
 					document.getElementById("form4").style.visibility='hidden';
 					document.getElementById("form5").style.visibility='hidden';
 					document.getElementById("form6").style.visibility='visible';
-					
+
 			 }else{
                 }
 
@@ -159,9 +159,9 @@
       });
     </script>
 
-	
+
 <!--Style for keeping multiple forms aligned -->
-	
+
 <style>
       div.a{
 	  top:200px;
@@ -187,7 +187,7 @@
       top:200px;
 	  left:600px;
 	  position:absolute;}
-	  
+
       div.f{
       top:200px;
 	  left:600px;
@@ -267,7 +267,7 @@ div {
 <!--Style for background image -->
 
 
-<style> 
+<style>
 body {
     background-image: url("book.jpeg");
     background-color: #cccccc;
@@ -309,7 +309,7 @@ body {
             <label class='conatiner_radio'>New Customer Order<input value="4" type="radio" name="formselector" style="vertical-align: middle"  onclick="displayForm(this)"></label>
             <label class='conatiner_radio'>Summary<input value="5" type="radio" name="formselector" style="vertical-align: middle"  onclick="displayForm(this)"></label>
 			<label class='conatiner_radio'>Customer Information<input value="6" type="radio" name="formselector" style="vertical-align: middle"  onclick="displayForm(this)"></label>
-			
+
 
         </center>
 		</form>
@@ -317,7 +317,7 @@ body {
 
 <!--Form for Adding new customer -->
 
-<form style="visibility:hidden" id="form1"  action="insert.php" method="POST">
+<form style="visibility:hidden" id="form1"  action="Insert.php" method="POST">
 <div class="a">
 <h2><center> Add Customer </center></h2>
 
@@ -336,7 +336,7 @@ body {
 
 <!--Form for Updating customer information -->
 
-<form style="visibility:hidden" id="form2" action="insert.php" method="POST">
+<form style="visibility:hidden" id="form2" action="Insert.php" method="POST">
 <div class="b">
 <h2><center> Update Customer Information </center></h2>
 
@@ -344,7 +344,7 @@ body {
     First Name*: <input type="text" name="fname" required="required">
     Middle Name: <input type="text" name="mname">
     Last Name*: <input type="text" name="lname" required="required">
-    Phone*: <input type="text" name="phone" pattern="[0-9]{10}" required="required"> 
+    Phone*: <input type="text" name="phone" pattern="[0-9]{10}" required="required">
     Email*: <input type="email" name="email" required="required"><br><br>
     <input type="submit" name="update_cust">
     <input type="reset">
@@ -352,7 +352,7 @@ body {
 
 </form>
 
-<form style="visibility:hidden" id="form3" action="insert.php" method="POST">
+<form style="visibility:hidden" id="form3" action="Insert.php" method="POST">
 <div class="c">
 <h2><center> Update Stock </center></h2>
 
@@ -374,7 +374,7 @@ body {
 
 <!--Form for New Customer Order-->
 
-<form style="visibility:hidden" id="form4" action="insert.php" method="POST">
+<form style="visibility:hidden" id="form4" action="Insert.php" method="POST">
 <div class="d">
 <h2><center> New Customer Order</center> </h2>
 
@@ -394,19 +394,19 @@ body {
 
 <!--Summary form for Profit and Stock-->
 
-<form style="visibility:hidden" id="form5" action="insert.php" method="POST">
-    
+<form style="visibility:hidden" id="form5" action="Insert.php" method="POST">
+
 	<div class="e">
 	<h2><center> Summary </center></h2>
 
-      <input type="submit" name="stock_summary" value="Stock Summary" class="Stock Summary" formaction="Stock_Summary.php">
-      <input type="submit" name="Profit_summary" value="Profit Summary" class="Profit Summary" formaction="Profit_Summary.php">
+      <input type="submit" name="Stock_Summary" value="Stock Summary" class="Stock Summary" formaction="Stock_Summary.php">
+      <input type="submit" name="Profit_Summary" value="Profit Summary" class="Profit Summary" formaction="Profit_Summary.php">
     </div>
 </form>
 
 <!--Customer info Summary form-->
 
-<form style="visibility:hidden" id="form6" action="insert.php" method="POST">
+<form style="visibility:hidden" id="form6" action="Insert.php" method="POST">
 
     <div class="f">
 	<h2><center> Customer Information </center></h2>

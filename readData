@@ -1,0 +1,66 @@
+-- Reading Data
+
+-- This works well with self describing formats. Well defined formats. Not csv :()
+
+SELECT * FROM delta.`/path/to/delta/table`
+
+SELECT * FROM json.`/path/to/json/file`
+
+SELECT * FROM parquet.`/path/to/parquet/file`
+
+SELECT * FROM csv.`/path/to/csv/file`
+
+SELECT * FROM avro.`/path/to/avro/file`
+
+-- When working with text-based files (which include JSON, CSV, TSV, and TXT formats), you can use the text format to load each line of the file as a row with one string column named value.
+    -- This can be useful when data sources are prone to corruption and custom text parsing functions will be used to extract values from text fields.
+    -- Example, this entire json string becomes a row in the column called "value": 
+        -- {"key":"VUEwMDAwMDAxMDczOTgwNTQ=","offset":219255030,"partition":0,"timestamp":1593880885085,"topic":"clickstream","value":"eyJkZXZpY2UiOiJBbmRyb2lkIiwiZWNvbW1lcmNlIjp7fSwiZXZlbnRfbmFtZSI6Im1haW4iLCJldmVudF90aW1lc3RhbXAiOjE1OTM4ODA4ODUwMzYxMjksImdlbyI6eyJjaXR5IjoiTmV3IFlvcmsiLCJzdGF0ZSI6Ik5ZIn0sIml0ZW1zIjpbXSwidHJhZmZpY19zb3VyY2UiOiJnb29nbGUiLCJ1c2VyX2ZpcnN0X3RvdWNoX3RpbWVzdGFtcCI6MTU5Mzg4MDg4NTAzNjEyOSwidXNlcl9pZCI6IlVBMDAwMDAwMTA3Mzk4MDU0In0="}
+SELECT * FROM text.`/path/to/text/file`
+
+-- Think images, audio, etc.
+    -- Some workflows may require working with entire files, such as when dealing with images or unstructured data. Using binaryFile to query a directory will provide file metadata alongside the binary representation of the file contents.
+    -- Specifically, the fields created will indicate the path, modificationTime, length, and content.
+SELECT * FROM binary.`/path/to/binary/file`
+
+SELECT * FROM orc.`/path/to/orc/file`
+
+SELECT * FROM tablename
+
+SELECT * FROM viewname
+
+SELECT * FROM (SELECT * FROM tablename WHERE condition) AS subquery
+
+
+-- Unity Catalog
+
+SELECT current_metastore()
+SELECT current_catalog()
+SELECT current_database()
+SHOW CATALOGS;
+
+
+-- VIEWS persisted in DB
+CREATE VIEW mirnes_salkic_1tbj_da_delp.event_view ( key, offset, partition, timestamp, topic, value) 
+TBLPROPERTIES ( 'transient_lastDdlTime' = '1713548407') 
+AS SELECT * FROM json.`dbfs:/mnt/dbacademy-datasets/data-engineer-learning-path/v02/ecommerce/raw/events-kafka`
+
+
+-- TEMP VIEWS session-scoped
+CREATE OR REPLACE TEMP VIEW events_temp_view
+AS SELECT * FROM json.`${DA.paths.kafka_events}`
+
+-- GLOBAL TEMP view - cluster-scoped
+CREATE GLOBAL TEMP VIEW events AS SELECT * FROM table
+
+-- The global temp view is stored on the cluster in global_temp database
+SELECT * FROM global_temp.events
+-- See all global views!
+SHOW TABLES IN global_temp;
+
+-- CTE (Common Table Expressions) - is a temporary result set defined within the execution scope of a single SQL statement. It exists only during the exectution of the query. Use to simplify complex queries by breaking them into simpler parts. They can be references multiple times within that query.
+    -- Common table expressions (CTEs) are perfect when you want a short-lived, human-readable reference to the results of a query. CTEs only alias the results of a query while that query is being planned and executed.
+WITH cte_json
+AS (SELECT * FROM json.`${DA.paths.kafka_events}`)
+SELECT * FROM cte_json
+

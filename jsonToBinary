@@ -1,0 +1,36 @@
+
+
+
+
+
+
+
+
+
+
+# Convert a JSON String to Binary the Hard Way
+%python
+import json
+import binascii
+
+# Original JSON string
+json_string = '{"name": "John", "age": 30, "city": "New York"}'
+print(f"JSON STRING: {json_string}")
+
+# Convert JSON string to a Python dictionary
+python_dict = json.loads(json_string)
+print(f"PYTHON DICT: {python_dict}")
+
+# Convert Python dictionary to a JSON formatted string
+json_data = json.dumps(python_dict)
+print(f"JSON DATA: {json_data}")
+
+# Encode JSON string to bytes
+json_bytes = json_data.encode('utf-8')
+print(f"JSON BYTES: {json_bytes}")
+
+# Convert bytes to binary representation
+binary_data = binascii.b2a_base64(json_bytes)
+
+# Print the binary data
+print(binary_data)

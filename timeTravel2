@@ -1,0 +1,45 @@
+
+/* 
+UDFs are powerful when combined with CASE WHEN statements.
+
+1. Define/Register UDF
+2. Security Model for sharing UDF
+3. USE case when statements in SQL code
+4. USE case when in UDFs for custom control flow
+ */
+
+ /* 
+ User Defined Functions (UDFs) in Spark SQL allow you to register custom SQL logic as functions in a database, making these methods reusable anywhere SQL 
+ can be run on Databricks. These functions are registered natively in SQL and maintain all of the optimizations of Spark when applying custom logic to 
+ large datasets. At minimum, creating a SQL UDF requires a function name, optional parameters, the type to be returned, and some custom logic.
+
+ Note that this function is applied to all values of the column in a parallel fashion within the Spark processing engine. 
+ SQL UDFs are an efficient way to define custom logic that is optimized for execution on Databricks.
+  */
+
+
+CREATE OR REPLACE FUNCTION sale_announcement(item_name STRING, item_price INT)
+RETURNS STRING
+RETURN concat("The ", item_name, " is on sale for $", round(item_price * 0.8, 0));
+
+SELECT *, sale_announcement(name, price) AS message FROM item_lookup
+
+
+-- helper functions
+DESCRIBE FUNCTION EXTENDED sale_announcement
+
+DESCRIBE FUNCTION sale_announcement
+
+
+-- UDFs and Case/When
+CREATE OR REPLACE FUNCTION item_preference(name STRING, price INT)
+RETURNS STRING
+RETURN CASE 
+  WHEN name = "Standard Queen Mattress" THEN "This is my default mattress"
+  WHEN name = "Premium Queen Mattress" THEN "This is my favorite mattress"
+  WHEN price > 100 THEN concat("I'd wait until the ", name, " is on sale for $", round(price * 0.8, 0))
+  ELSE concat("I don't need a ", name)
+END;
+
+SELECT *, item_preference(name, price) FROM item_lookup
+

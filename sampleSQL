@@ -1,0 +1,117 @@
+-- Data types
+    -- https://learn.microsoft.com/en-us/azure/databricks/sql/language-manual/sql-ref-datatypes 
+
+-- Column expressions
+COUNT()
+SUM()
+AVG()
+MIN()
+MAX()
+DISTINCT()
+AS()
+LIKE()
+COALESCE() -- Returns the first non-null value in a list of expressions
+GROUP BY()
+ORDER BY()
+HAVING()
+CAST()
+CONCAT()
+SUBSTRING()
+COALESCE()
+CASE()
+DATE_PART()
+LENGTH()
+
+-- Operators
+=
+<> or !=
+>
+<
+>=
+<=
+AND
+OR
+NOT
++
+-
+*
+/
+%
+||
+IN
+LIKE
+BETWEEN
+IS NULL
+IS NOT NULL
+
+-- Built in functions
+    -- https://learn.microsoft.com/en-us/azure/databricks/sql/language-manual/sql-ref-functions-builtin
+
+
+-- NULL behaviors
+    /* 
+    NOTE: Null values behave incorrectly in some math functions, including count().
+
+    count(col) skips NULL values when counting specific columns or expressions.
+    count(*) is a special case that counts the total number of rows (including rows that are only NULL values).
+    We can count null values in a field by filtering for records where that field is null, using either:
+    count_if(col IS NULL) or count(*) with a filter for where col IS NULL.
+
+    Both statements below correctly count records with missing emails.
+    */
+
+SELECT count(*), count(user_id), count(user_first_touch_timestamp), count(email), count(updated)
+FROM users_dirty
+
+
+-- Count nulls
+SELECT count_if(email IS NULL) FROM users_dirty;
+SELECT count(*) FROM users_dirty WHERE email IS NULL;
+
+-- Retrieve duplicates
+
+-- Remove duplicates
+SELECT DISTINCT(*) FROM users_dirty
+
+-- Deduplicate based on specific columns (e.g. unique users) -> return all columns
+CREATE OR REPLACE TEMP VIEW deduped_users AS 
+SELECT user_id, user_first_touch_timestamp, max(email) AS email, max(updated) AS updated
+FROM users_dirty
+WHERE user_id IS NOT NULL
+GROUP BY user_id, user_first_touch_timestamp;
+
+SELECT count(*) FROM deduped_users
+
+
+-- Confirm the duplicates are correct
+SELECT COUNT(DISTINCT(user_id, user_first_touch_timestamp))
+FROM users_dirty
+WHERE user_id IS NOT NULL
+
+
+-- Validate datasets 1
+SELECT max(row_count) <= 1 no_duplicate_ids FROM (
+  SELECT user_id, count(*) AS row_count
+  FROM deduped_users
+  GROUP BY user_id)
+
+-- Validate datasets 2
+SELECT max(user_id_count) <= 1 at_most_one_id FROM (
+  SELECT email, count(user_id) AS user_id_count
+  FROM deduped_users
+  WHERE email IS NOT NULL
+  GROUP BY email)
+
+
+-- Date format, cast, regexp_extract. user_first_touch_timestamp was a bigint
+SELECT *, 
+  date_format(first_touch, "MMM d, yyyy") AS first_touch_date,
+  date_format(first_touch, "HH:mm:ss") AS first_touch_time,
+  regexp_extract(email, "(?<=@).+", 0) AS email_domain
+FROM (
+  SELECT *,
+    CAST(user_first_touch_timestamp / 1e6 AS timestamp) AS first_touch 
+  FROM deduped_users
+)
+
+

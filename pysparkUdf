@@ -1,0 +1,100 @@
+
+""" 
+Can’t be optimized by Catalyst Optimizer
+Function is serialized and sent to executors
+Row data is deserialized from Spark's native binary format to pass to the UDF, and the results are serialized back into Spark's native format
+For Python UDFs, additional interprocess communication overhead between the executor and a Python interpreter running on each worker node
+
+SQL UDFs are very performant - they use the catalyst optimizer
+Pandas UDFs are second best - use Apache Arrow for transfer. They can be used directly on spark dataframes.
+Pandas UDFs with apply - are slightly worse
+Python UDFs are bad - serialization/deserialization
+See blog: https://www.databricks.com/blog/2017/10/30/introducing-vectorized-udfs-for-pyspark.html
+See documentation: https://spark.apache.org/docs/latest/api/python/user_guide/sql/arrow_pandas.html?highlight=arrow
+ """
+
+# Step 1. Define a function (on the driver) to get the first letter of a string from the **`email`** field.
+def first_letter_function(email):
+    return email[0]
+
+first_letter_function("annagray@kaufman.com")
+
+
+# Step 2. Register the function as a UDF. This serializes the function and sends it to executors to be able to transform DataFrame records.
+first_letter_udf = udf(first_letter_function)
+
+# Step 3. Apply the UDF on the email column.
+from pyspark.sql.functions import col
+
+display(sales_df.select(first_letter_udf(col("email"))))
+
+
+# Decorator Syntax
+""" 
+https://realpython.com/primer-on-python-decorators/
+https://docs.python.org/3/library/typing.html -- Python type hints
+https://arrow.apache.org/
+Alternatively, you can define and register a UDF using Python decorator syntax. The @udf decorator parameter is the Column datatype the function returns.
+
+You will no longer be able to call the local Python function (i.e., first_letter_udf("annagray@kaufman.com") will not work).
+
+Note This example also uses Python type hints, which were introduced in Python 3.5. Type hints are not required for this example, 
+but instead serve as "documentation" to help developers use the function correctly. 
+They are used in this example to emphasize that the UDF processes one record at a time, taking a single str argument and returning a str value.
+ """
+
+# Our input/output is a string
+@udf("string") #note that there is an option here useArrow=True that can be used! Check Pickled Python UDF vs. Arrow Python UDF
+def first_letter_udf(email: str) -> str:
+    return email[0]
+
+from pyspark.sql.functions import col
+
+sales_df = spark.table("sales")
+display(sales_df.select(first_letter_udf(col("email"))))
+
+
+# PANDAS UDF
+import pandas as pd
+from pyspark.sql.functions import pandas_udf
+
+# We have a string input/output
+@pandas_udf("string")
+def vectorized_udf(email: pd.Series) -> pd.Series:
+    return email.str[0]
+
+# Alternatively
+# def vectorized_udf(email: pd.Series) -> pd.Series:
+#     return email.str[0]
+# vectorized_udf = pandas_udf(vectorized_udf, "string")
+
+# Register register these Pandas UDFs to the SQL namespace.
+spark.udf.register("sql_vectorized_udf", vectorized_udf)
+
+# Use the Pandas UDF from SQL
+SELECT sql_vectorized_udf(email) AS firstLetter FROM sales
+
+########################################################################################################################################
+
+# Example pandas udf on top of a spark df - a proof to myself
+from pyspark.sql.functions import pandas_udf
+from pyspark.sql.types import IntegerType
+import pandas as pd
+
+# Define the Pandas UDF
+@pandas_udf("integer")
+def string_length_udf(s: pd.Series) -> pd.Series:
+    return s.astype(str).str.len()
+
+# Assume `transactions_df` is a Spark DataFrame with a 'transaction_id' column
+# Apply the Pandas UDF to the 'transaction_id' column
+lengths_df = transactions_df.withColumn('id_length', string_length_udf(col('transaction_id')))
+
+# Show the result
+lengths_df.show()
+
+
+
+
+
+

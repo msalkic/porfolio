@@ -1,0 +1,8 @@
+CREATE DATABASE IF NOT EXISTS mirnes_managed_catalog.pk_fk;
+
+CREATE OR REPLACE TABLE mirnes_managed_catalog.pk_fk.persons(first_name STRING NOT NULL, last_name STRING NOT NULL, nickname STRING, CONSTRAINT persons_pk PRIMARY KEY (first_name));
+
+CREATE OR REPLACE TABLE mirnes_managed_catalog.pk_fk.pets(name STRING, owner_first_name STRING, owner_last_name STRING, CONSTRAINT pets_persons_fk FOREIGN KEY (owner_first_name) REFERENCES mirnes_managed_catalog.pk_fk.persons(first_name));
+
+INSERT INTO mirnes_managed_catalog.pk_fk.persons VALUES ("Jane", "Doe", "Manager"), ("John", "Smith", "Artists"), ("Laura", "Garcia", "Lily");
+INSERT INTO mirnes_managed_catalog.pk_fk.pets VALUES ("Fido", "Jane", "Doe"), ("Luna", "Laura", "Garcia");

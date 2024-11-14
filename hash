@@ -1,0 +1,3 @@
+SELECT *, 
+       xxhash64(hash(c_custkey, source)) AS hash_value 
+FROM mirnes_managed_catalog.datavault.hub_customer
